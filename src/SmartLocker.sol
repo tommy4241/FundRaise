@@ -7,13 +7,13 @@
 
 pragma solidity ^0.8.13;
 
-import "./TransferHelper.sol";
-import "./EnumerableSet.sol";
-import "./SafeMath.sol";
-import "./Ownable.sol";
-import "./ReentrancyGuard.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/math/SafeMath.sol";
+import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import "../lib/openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import "./IUniswapV2Pair.sol";
 import "./IUniswapV2Factory.sol";
+import "./TransferHelper.sol";
 
 contract SmartLocker is Ownable, ReentrancyGuard {
   using SafeMath for uint256;
@@ -53,7 +53,7 @@ contract SmartLocker is Ownable, ReentrancyGuard {
   event onDeposit(address lpToken, address user, uint256 amount, uint256 lockDate, uint256 unlockDate);
   event onWithdraw(address lpToken, uint256 amount);
 
-  constructor(IUniswapV2Factory _swapFactory) public {
+  constructor(IUniswapV2Factory _swapFactory) {
     devaddr = payable(msg.sender);
     gFees.devFee = 1e18;
     gFees.liquidityFee = 10; // 1%

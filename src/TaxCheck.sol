@@ -11,7 +11,7 @@ contract TaxCheck {
     address public presale;
     uint256 public tokenBalance;
     
-    constructor(address _presaleTokenAddr, address _presale, uint256 _tokenBalance) public {
+    constructor(address _presaleTokenAddr, address _presale, uint256 _tokenBalance) {
         presaleTokenAddr = _presaleTokenAddr;
         presale = _presale;
         tokenBalance = _tokenBalance;

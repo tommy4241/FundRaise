@@ -4,12 +4,12 @@
 
 pragma solidity ^0.8.13;
 
-import "./Ownable.sol";
-import "./TransferHelper.sol";
-import "./IERC20.sol";
+import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "./IUniswapV2Factory.sol";
 import "./IPresaleFactory.sol";
 import "./IUniswapV2Pair.sol";
+import "./TransferHelper.sol";
 
 interface ISmartLocker {
     function lockLPToken (address _lpToken, uint256 _amount, uint256 _unlock_date, address payable _withdrawer) external payable;
@@ -21,7 +21,7 @@ contract SmartLockForwarder is Ownable {
     ISmartLocker public smartLocker;
     IUniswapV2Factory public swapFactory;
     
-    constructor(IPresaleFactory _presaleFactory, ISmartLocker _smartLocker, IUniswapV2Factory _swapFactory) public {
+    constructor(IPresaleFactory _presaleFactory, ISmartLocker _smartLocker, IUniswapV2Factory _swapFactory) {
         presaleFactory = _presaleFactory;
         smartLocker = _smartLocker;
         swapFactory = _swapFactory;

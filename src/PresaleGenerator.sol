@@ -3,9 +3,9 @@
 pragma solidity ^0.8.13;
 
 
-import "./Ownable.sol";
-import "./SafeMath.sol";
-import "./EnumerableSet.sol";
+import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/math/SafeMath.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol";
 import "./Presale.sol";
 import "./IPresaleFactory.sol";
 import "./TransferHelper.sol";

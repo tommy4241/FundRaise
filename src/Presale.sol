@@ -2,14 +2,15 @@
 
 pragma solidity ^0.8.13;
 
-import "./SafeMath.sol";
-import "./EnumerableSet.sol";
-import "./ReentrancyGuard.sol";
-import "./IERC20.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/math/SafeMath.sol";
+import "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import "../lib/openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol";
+import "../lib/openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import "./TaxCheck.sol";
+import "./IERC20Detailed.sol";
 
 interface ISmartLockForwarder {
-    function lockLiquidity (IERC20 _baseToken, IERC20 _saleToken, uint256 _baseAmount, uint256 _saleAmount, uint256 _unlock_date, address payable _withdrawer) external;
+    function lockLiquidity (IERC20Detailed _baseToken, IERC20Detailed _saleToken, uint256 _baseAmount, uint256 _saleAmount, uint256 _unlock_date, address payable _withdrawer) external;
     function swapPairIsInitialised (address _token0, address _token1) external view returns (bool);
 }
 
@@ -33,8 +34,8 @@ contract Presale is ReentrancyGuard {
 
     struct PresaleInfo {
         address payable presaleOwner;
-        IERC20 presaleToken; // sale token
-        IERC20 baseToken; // base token 
+        IERC20Detailed presaleToken; // sale token
+        IERC20Detailed baseToken; // base token 
         uint256 presaleRate; // 1 base token = ? s_tokens, fixed price
         uint256 minSpendPerBuyer; // minimum base token BUY amount per account
         uint256 maxSpendPerBuyer; // maximum base token BUY amount per account
@@ -82,7 +83,7 @@ contract Presale is ReentrancyGuard {
         address payable _devAddr,
         IStaking _smartStaking,
         IVerify _verifyContract) 
-    public {
+    {
         presaleGenerator = _presaleGenerator;
         smartLockForwarder = _smartLockForwarder;
         WETH = IWETH(_WETHAddr);
@@ -127,14 +128,14 @@ contract Presale is ReentrancyGuard {
 
     function initPresale2(
         address payable _presaleOwner, 
-        IERC20 _presaleToken, 
+        IERC20Detailed _presaleToken, 
         address _baseTokenAddr,
         bytes32 _linksHash,
         uint256 _presaleID
     ) external onlyPresaleGenerator {
         presaleInfo.presaleOwner = _presaleOwner;
         presaleInfo.presaleToken = _presaleToken;
-        presaleInfo.baseToken = IERC20(_baseTokenAddr);
+        presaleInfo.baseToken = IERC20Detailed(_baseTokenAddr);
         linksHash = _linksHash;
         presaleID = _presaleID;
     }
@@ -186,7 +187,7 @@ contract Presale is ReentrancyGuard {
         
         // return unused FTM
         if (amount_in < msg.value) {
-            msg.sender.transfer(msg.value.sub(amount_in));
+            payable(msg.sender).transfer(msg.value.sub(amount_in));
         }
     }
 
@@ -210,7 +211,7 @@ contract Presale is ReentrancyGuard {
         require(tokensOwed > 0, 'NOTHING TO WITHDRAW');
         status.TOTAL_BASE_WITHDRAWN = status.TOTAL_BASE_WITHDRAWN.add(buyer.baseDeposited);
         buyer.baseDeposited = 0;
-        msg.sender.transfer(tokensOwed);
+        payable(msg.sender).transfer(tokensOwed);
     }
 
     function ownerWithdrawTokens () external onlyPresaleOwner {

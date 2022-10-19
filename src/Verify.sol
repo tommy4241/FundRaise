@@ -6,7 +6,7 @@ contract Verify {
     address private validator_;
     mapping(bytes32 => bool) private isUsed;
 
-    constructor() public {
+    constructor() {
         owner_ = msg.sender;
         validator_ = msg.sender;
     }
@@ -30,7 +30,7 @@ contract Verify {
                     "\x19Ethereum Signed Message:\n32",
                     keccak256(
                         abi.encodePacked(
-                            "PRESALEMONEYFTW",
+                            "FUNDRAISINGSCSETS",
                             _saleNum,
                             _amount,
                             _sHash
